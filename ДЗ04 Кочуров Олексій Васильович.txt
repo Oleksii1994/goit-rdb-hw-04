@@ -1,0 +1,256 @@
+﻿1. CREATE SCHEMA LibraryManagement;
+
+
+use LibraryManagement;
+
+
+create table authors (author_id INT AUTO_INCREMENT PRIMARY KEY, author_name VARCHAR(255));
+
+
+create table genres (genre_id INT AUTO_INCREMENT PRIMARY KEY, genre_name VARCHAR(255));
+
+
+create table books (
+ book_id INT AUTO_INCREMENT PRIMARY KEY,
+ title VARCHAR(255),
+ publication_year YEAR,
+ author_id INT,
+ FOREIGN KEY (author_id) REFERENCES authors(author_id),
+ genre_id INT,
+ FOREIGN KEY (genre_id) REFERENCES genres(genre_id)
+ );
+
+
+create table users (
+ user_id INT AUTO_INCREMENT PRIMARY KEY,
+ username VARCHAR(255),
+ email VARCHAR(45)
+);
+
+
+create table borrowed_books (
+borrow_id INT AUTO_INCREMENT PRIMARY KEY,
+book_id INT,
+FOREIGN KEY (book_id) REFERENCES books(book_id),
+user_id INT,
+FOREIGN KEY (user_id) REFERENCES users(user_id),
+borrow_date DATE,
+return_date DATE
+);
+
+
+
+
+
+
+
+
+2. INSERT INTO authors (author_name)
+VALUES ('Mark Twen'), ('Stephen King'), ('Johanne Rowling');
+
+
+INSERT INTO genres (genre_name)
+VALUES ('horror'), ('fantasy'), ('novel');
+
+
+INSERT INTO books (title, publication_year, author_id, genre_id)
+VALUES ('Tom Sawyer', '2000', 1, 3), ('Cell', '2006', 2, 1), ('Harry Potter', '1997', 3, 2);
+
+
+
+
+INSERT INTO users (username, email)
+VALUES ('Oleksii Kochurov', 'aleks@icloud.com'), ('Geralt of Rivia', 'geralt@yahoo.com'), ('Captain Shepard', 'shepard@gmail.com');
+
+
+INSERT INTO borrowed_books (book_id, user_id, borrow_date, return_date)
+VALUES (3, 1, '2023-09-19', '2024-01-01'), (2, 2, '2022-08-22', '2023-02-10'), (1, 3, '2024-01-19', '2024-03-16');
+
+
+
+
+
+
+3. use mydb;
+
+
+select *
+from orders
+inner join order_details on orders.id = order_details.order_id
+inner join customers on orders.customer_id = customers.id
+inner join products on order_details.product_id = products.id
+inner join categories on products.category_id = categories.id
+inner join employees on orders.employee_id = employees.employee_id
+inner join shippers on orders.shipper_id = shippers.id
+inner join suppliers on products.supplier_id = suppliers.id;
+
+
+
+
+
+
+               4 )  1. use mydb;
+
+
+select count(*)
+from orders
+inner join order_details on orders.id = order_details.order_id
+inner join customers on orders.customer_id = customers.id
+inner join products on order_details.product_id = products.id
+inner join categories on products.category_id = categories.id
+inner join employees on orders.employee_id = employees.employee_id
+inner join shippers on orders.shipper_id = shippers.id
+inner join suppliers on products.supplier_id = suppliers.id;
+
+
+
+
+2. use mydb;
+
+
+select count(*)
+from orders
+inner join order_details on orders.id = order_details.order_id
+right join customers on orders.customer_id = customers.id
+inner join products on order_details.product_id = products.id
+left join categories on products.category_id = categories.id
+inner join employees on orders.employee_id = employees.employee_id
+inner join shippers on orders.shipper_id = shippers.id
+inner join suppliers on products.supplier_id = suppliers.id;
+
+
+//Іноді коли ми використовуємо LEFT або RIGHT JOIN, результати калькуляції рядків можуть відрізнятись через те що в першому випадку ми отримаємо всі рядки з лівої таблиці і лише рядки які співпадають з правої таблиці, і навпаки у випадку коли ми обʼєднуємо таблиці по правій, де до усіх рядків з правої таблиці додадуться лише співпадаючі рядки з лівої таблиці. Там де  співпадінь не знайдеться, то запишеться NULL. 
+
+
+
+
+3. use mydb;
+
+
+    select count(*)
+    from orders
+
+
+    inner join order_details on orders.id = order_details.order_id  
+    inner join customers on orders.customer_id = customers.id
+    inner join products on order_details.product_id = products.id
+    inner join categories on products.category_id = categories.id
+    inner join employees on orders.employee_id = employees.employee_id
+    inner join shippers on orders.shipper_id = shippers.id
+    inner join suppliers on products.supplier_id = suppliers.id
+
+
+    where employees.employee_id > 3 and employees.employee_id <= 10
+
+
+
+
+
+
+4. use mydb;
+
+
+    select categories.name as category_name,
+    count(*) as rows_total,
+    avg(order_details.quantity) as avg_quantity
+
+
+    from order_details
+
+
+    inner join orders on order_details.order_id = orders.id
+    left join customers on orders.customer_id = customers.id
+    inner join products on order_details.product_id = products.id
+    right join categories on products.category_id = categories.id
+    inner join employees on orders.employee_id = employees.employee_id
+    inner join shippers on orders.shipper_id = shippers.id
+    left join suppliers on products.supplier_id = suppliers.id
+
+
+    where employees.employee_id > 3 and employees.employee_id <= 10
+    group by categories.name
+
+
+
+
+5. use mydb;
+
+
+    select categories.name as category_name,
+    count(*) as rows_total,
+    avg(order_details.quantity) as avg_quantity
+
+
+    from order_details
+
+
+    inner join orders on order_details.order_id = orders.id
+    left join customers on orders.customer_id = customers.id
+    inner join products on order_details.product_id = products.id
+    right join categories on products.category_id = categories.id
+    inner join employees on orders.employee_id = employees.employee_id
+    inner join shippers on orders.shipper_id = shippers.id
+    left join suppliers on products.supplier_id = suppliers.id
+
+
+    where employees.employee_id > 3 and employees.employee_id <= 10
+    group by categories.name
+    having avg_quantity > 21
+
+
+
+
+
+
+6.   use mydb
+      
+      select categories.name as category_name,
+      count(*) as rows_total,
+      avg(order_details.quantity) as avg_quantity
+
+
+      from order_details
+
+
+      inner join orders on order_details.order_id = orders.id
+      left join customers on orders.customer_id = customers.id
+      inner join products on order_details.product_id = products.id
+      right join categories on products.category_id = categories.id
+      inner join employees on orders.employee_id = employees.employee_id
+      inner join shippers on orders.shipper_id = shippers.id
+      left join suppliers on products.supplier_id = suppliers.id
+ 
+      where employees.employee_id > 3 and employees.employee_id <= 10
+      group by categories.name
+      having avg_quantity > 21
+      order by rows_total desc
+
+
+
+
+7.   use mydb;
+
+
+      select categories.name as category_name,
+      count(*) as rows_total,
+      avg(order_details.quantity) as avg_quantity
+
+
+      from order_details
+
+
+      inner join orders on order_details.order_id = orders.id
+      left join customers on orders.customer_id = customers.id
+      inner join products on order_details.product_id = products.id
+      right join categories on products.category_id = categories.id
+      inner join employees on orders.employee_id = employees.employee_id
+      inner join shippers on orders.shipper_id = shippers.id
+      left join suppliers on products.supplier_id = suppliers.id
+
+
+      where employees.employee_id > 3 and employees.employee_id <= 10
+      group by categories.name
+      having avg_quantity > 21
+      order by rows_total desc
+      limit 4
+      offset 1
